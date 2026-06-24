@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+
+  # Banco Vetorial ───────────────────────────────────────
+  qdrant:
+    image: qdrant/qdrant:v1.9.2
+    container_name: clinic-qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+  # Memória de Conversa ─────────────────────────────────────────────────────
+  redis:
+    image: redis:7.2-alpine
+    # alpine = imagem mínima (~7MB vs ~100MB da versão padrão)
+    container_name: clinic-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    # appendonly yes = persistência em disco (dados sobrevivem a reinicializações)
+    restart: unless-stopped
+
+  # Evolution API (WhatsApp) ────────────────────────────────────────────────
+  evolution:
+    image: atendai/evolution-api:v2.1.1
+    container_name: clinic-evolution
+    ports:
+      - "8080:8080"
+    volumes:
+      - evolution_data:/evolution/instances
+    environment:
+      # Chave de autenticação da API — use um valor forte em produção
+      AUTHENTICATION_API_KEY: ${EVOLUTION_API_KEY}
+      # URL do webhook — para onde a Evolution vai enviar as mensagens recebidas
+      WEBHOOK_GLOBAL_URL: ${WEBHOOK_URL}
+      WEBHOOK_GLOBAL_ENABLED: "true"
+      WEBHOOK_EVENTS_MESSAGES_UPSERT: "true"
+      # Banco de dados interno da Evolution
+      DATABASE_ENABLED: "false"
+      LOG_LEVEL: "ERROR"
+    restart: unless-stopped
+
+volumes:
+  qdrant_data:
+  redis_data:
+  evolution_data:
