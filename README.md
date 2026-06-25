@@ -50,8 +50,8 @@ Atendente automático para clínica médica via WhatsApp. O bot:
 ### Instalação
  
 ```bash
-git clone https://github.com/seu-usuario/whatsapp-clinic-bot
-cd whatsapp-clinic-bot
+git clone https://github.com/FernandaAndradedev-hash/Assistente-de-Whatsapp-com-IA
+cd Assistente-de-Whatsapp-com-IA
 python -m venv .venv && .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 copy .env.example .env
