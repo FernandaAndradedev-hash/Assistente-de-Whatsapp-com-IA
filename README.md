@@ -99,6 +99,7 @@ Assistente-de-Whatsapp-com-IA/
 │   ├── agent.py            # Orquestração LLM
 │   └── api.py              # Webhook FastAPI
 ├── tests/
+├── docker-compose.yml
 
 ````
 
